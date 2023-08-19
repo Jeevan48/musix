@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,500&family=Playfair+Display&display=swap');
+body{
+    background-color:antiquewhite;
+}
+*{
+    margin: 0;
+    padding: 0;
+
+}
+nav{
+    font-family: 'Bricolage Grotesque', sans-serif;
+}
+nav ul{
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+    height: 55px;
+    background-color: black;
+    color: white;
+}
+nav ul li{
+    padding: 0 12px;
+}
+.brand img{
+    width:44px;
+    padding: 0 10px;
+}
+.brand{
+    display: flex;
+    align-items: center;
+    font-weight: bolder;
+    font-size: 1.3rem;
+}
+.container{
+    min-height: 65vh;
+    background-color: black;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    display: flex;
+    width: 70%;
+    border-radius: 12px;
+    padding: 10px;
+    margin: 23px auto;
+    background-image: url(background1.jpg);
+
+}
+.bottom{
+    position: sticky;
+    height: 120px;
+    background-color: black;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    flex-direction: column;
+    
+}
+.icons{
+    margin-top: 15px;
+}
+.icons i{
+    cursor: pointer;
+}
+#myprogressbar{
+    width: 80vw;
+    cursor: pointer;
+}
+.songitem{
+    display: flex;
+    height: 50px;
+    background-color: white;
+    width: 100%;
+    color: black;
+    margin:12px 0;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 30px;
+}
+.songitem img {
+    margin: 0 2px;
+    width: 45px;
+    border-radius: 50%;
+    
+}
+.timestamp{
+    margin: 0 23px;
+   
+
+}
+.timestamp i{
+    cursor: pointer;
+}
+.songitemcontainer{
+    margin: 24px 0;
+}
+.songinfo{
+    position: absolute;
+    left: 10vw;
+    font-family: 'Bricolage Grotesque', sans-serif;
+}
+.songinfo img{
+    opacity: 0;
+    transition: opacity 0.4s ease-in;
+}
