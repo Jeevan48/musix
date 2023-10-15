@@ -7,7 +7,7 @@ let masterplay = document.getElementById('masterplay'); //the master play button
 let myprogressbar = document.getElementById('myprogressbar'); //song progress bar
 let gif = document.getElementById('gif'); //music play/pause visualizer
 let mastersongname = document.getElementById('mastersongname'); //current song name
-// let songitems = Array.from(document.getElementsByClassName('songitem'));
+let playlist = '10'; //stores playlist no
 
 let songs_1 = [
 	{
@@ -41,13 +41,6 @@ let songs_1 = [
 		coverPath: 'media/covers/6.jpg',
 	},
 ];
-
-// songitems.forEach((element, i) => {
-// 	console.log(element, i);
-// 	element.getElementsByTagName('img')[0].src = songs_1[i].coverPath;
-// 	element.getElementsByClassName('songname')[0].innerText =
-// 		songs_1[i].songname;
-// });
 
 function loadHTML(className, fileName) {
 	console.log('Div id: ' + className + ', filename: ' + fileName);
@@ -96,30 +89,48 @@ function loadHTML(className, fileName) {
 	}
 }
 
-//Master Play Button Event Listener
-function playPauseCSS() {
+//Play Pause methods
+function playPlayer() {
 	if (audioElement.paused || audioElement.currentTime <= 0) {
 		masterplay.classList.remove('fa-play-circle');
 		masterplay.classList.add('fa-pause-circle');
 		audioElement.play();
 		gif.style.opacity = 1;
-	} else {
+	}
+}
+
+function pausePlayer() {
+	if (audioElement.played && audioElement.currentTime > 0) {
 		audioElement.pause();
 		masterplay.classList.remove('fa-pause-circle');
 		masterplay.classList.add('fa-play-circle');
 		gif.style.opacity = 0;
 	}
 }
-masterplay.addEventListener('click', () => {
-	playPauseCSS();
-});
 
-//Progress Bar Update
-// audioElement.addEventListener('timeupdate', () => {
-// 	myprogressbar.value = parseInt(
-// 		(audioElement.currentTime / audioElement.duration) * 100
-// 	);
-// });
+function masterPlayAction() {
+	if (audioElement.paused || audioElement.currentTime <= 0) {
+		masterplay.classList.remove('fa-play-circle');
+		masterplay.classList.add('fa-pause-circle');
+		audioElement.play();
+		gif.style.opacity = 1;
+
+		pauseAll();
+		let elem = document.getElementById('10' + songindex);
+		elem.classList.remove('fa-circle-play');
+		elem.classList.add('fa-circle-pause');
+	} else {
+		audioElement.pause();
+		masterplay.classList.remove('fa-pause-circle');
+		masterplay.classList.add('fa-play-circle');
+		gif.style.opacity = 0;
+
+		pauseAll();
+		let elem = document.getElementById('10' + songindex);
+		elem.classList.remove('fa-circle-pause');
+		elem.classList.add('fa-circle-play');
+	}
+}
 
 //Progress Bar Click Action
 myprogressbar.addEventListener('change', () => {
@@ -127,69 +138,83 @@ myprogressbar.addEventListener('change', () => {
 		(myprogressbar.value * audioElement.duration) / 100;
 });
 
-const pauseAllOnScreen = () => {
+//change all songs CSS to paused
+function pauseAll() {
 	Array.from(document.getElementsByClassName('songitemplay')).forEach(
 		(element) => {
 			console.log('pauseAll Called');
-			// element.classList.remove('fa-circle-pause');
+			element.classList.remove('fa-circle-pause');
 			element.classList.add('fa-circle-play');
 		}
 	);
-};
-Array.from(document.getElementsByClassName('songitemplay')).forEach(
-	(element) => {
-		element.addEventListener('click', (e) => {
-			// console.log('Song Play Button Clicked');
-			// console.log(e.target);
-			// makeallplays();
-			songindex = parseInt(e.target.id);
+}
 
-			e.target.classList.remove('fa-circle-play');
-			e.target.classList.add('fa-circle-pause');
-			//audioElement.src ='songs/${index+1}.mp3';
-			audioElement.src = `songs/${songindex + 1}.mp3`;
-			mastersongname.innerText = songs_1[songindex].songname;
-			audioElement.currentTime = 0;
-			audioElement.play();
-			gif.style.opacity = 1;
-			masterplay.classList.remove('fa-circle-play');
-			masterplay.classList.add('fa-circle-pause');
-		});
+//song clicked method
+function songAction(songID) {
+	e = document.getElementById(songID);
+	//isAlreadyPlaying
+	if (e.classList.contains('fa-circle-pause')) {
+		console.log('a song was playing...pausing it...');
+		e.classList.remove('fa-circle-pause');
+		e.classList.add('fa-circle-play');
+		pausePlayer();
 	}
-);
+	//isPaused
+	else {
+		pauseAll();
+		console.log('a song was paused...playing it...');
+		e.classList.remove('fa-circle-play');
+		e.classList.add('fa-circle-pause');
+		pausePlayer();
+		audioElement.src = 'songs/' + songID + '.mp3';
+		songindex = parseInt(songID.charAt(songID.length - 1), 10);
+		console.log(songindex);
+		mastersongname.innerText = songs_1[songindex].songname;
+		playPlayer();
+	}
+}
 
-document.getElementById('next').addEventListener('click', () => {
+//next clicked
+function nextAction() {
 	if (songindex >= 5) {
 		songindex = 0;
 	} else {
 		songindex += 1;
 	}
-	audioElement.src = `songs/${songindex + 1}.mp3`;
+
+	pauseAll();
+	let elem = document.getElementById('10' + songindex);
+	elem.classList.remove('fa-circle-play');
+	elem.classList.add('fa-circle-pause');
+
+	pausePlayer();
+	audioElement.src = `songs/10${songindex}.mp3`;
 	mastersongname.innerText = songs_1[songindex].songname;
 	audioElement.currentTime = 0;
-	audioElement.play();
-	//gif.style.opacity=1;
-	masterplay.classList.remove('fa-circle-play');
-	masterplay.classList.add('fa-circle-pause');
-});
+	playPlayer();
+}
 
-document.getElementById('previous').addEventListener('click', () => {
+//previous clicked
+function previousAction() {
 	if (songindex <= 0) {
 		songindex = 0;
 	} else {
 		songindex -= 1;
 	}
-	audioElement.src = `songs/${songindex + 1}.mp3`;
+
+	pauseAll();
+	let elem = document.getElementById('10' + songindex);
+	elem.classList.remove('fa-circle-play');
+	elem.classList.add('fa-circle-pause');
+
+	pausePlayer();
+	audioElement.src = `songs/10${songindex}.mp3`;
 	mastersongname.innerText = songs_1[songindex].songname;
 	audioElement.currentTime = 0;
-	audioElement.play();
-	//gif.style.opacity=1;
-	masterplay.classList.remove('fa-circle-play fa-xl');
-	masterplay.classList.add('fa-circle-pause fa-xl');
-});
+	playPlayer();
+}
 
 //INIT Calls
 window.onload = function () {
-	pauseAllOnScreen();
+	console.log('Website fully loaded');
 };
-console.log('Hi');
