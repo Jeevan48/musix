@@ -1,12 +1,13 @@
-console.log('Welcome to spotify clone');
-//initialization
-let songindex = 0;
-let audioElement = new Audio('songs/1.mp3');
-let masterplay = document.getElementById('masterplay');
-let myprogressbar = document.getElementById('myprogressbar');
-let gif = document.getElementById('gif');
-let mastersongname = document.getElementById('mastersongname');
-let songitems = Array.from(document.getElementsByClassName('songitem'));
+console.log('Welcome to Musix!');
+
+// Variables Initialization
+let songindex = 0; //stored index no of current song
+let audioElement = new Audio('songs/1.mp3'); //stores the current song
+let masterplay = document.getElementById('masterplay'); //the master play button
+let myprogressbar = document.getElementById('myprogressbar'); //song progress bar
+let gif = document.getElementById('gif'); //music play/pause visualizer
+let mastersongname = document.getElementById('mastersongname'); //current song name
+// let songitems = Array.from(document.getElementsByClassName('songitem'));
 
 let songs_1 = [
 	{
@@ -41,11 +42,12 @@ let songs_1 = [
 	},
 ];
 
-songitems.forEach((element, i) => {
-	//console.log(element, i);
-	element.getElementsByTagName('img')[0].src = songs_1[i].coverPath;
-	element.getElementsByClassName('songname')[0].innerText = songs[i].songname;
-});
+// songitems.forEach((element, i) => {
+// 	console.log(element, i);
+// 	element.getElementsByTagName('img')[0].src = songs_1[i].coverPath;
+// 	element.getElementsByClassName('songname')[0].innerText =
+// 		songs_1[i].songname;
+// });
 
 function loadHTML(className, fileName) {
 	console.log('Div id: ' + className + ', filename: ' + fileName);
@@ -94,43 +96,42 @@ function loadHTML(className, fileName) {
 	}
 }
 
-//audioElement.play();
-//handle play/pause
-masterplay.addEventListener('click', () => {
-	masterplay.classList.remove('fa-play-circle');
-	masterplay.classList.add('fa-pause-circle');
+//Master Play Button Event Listener
+function playPauseCSS() {
 	if (audioElement.paused || audioElement.currentTime <= 0) {
+		masterplay.classList.remove('fa-play-circle');
+		masterplay.classList.add('fa-pause-circle');
 		audioElement.play();
 		gif.style.opacity = 1;
 	} else {
 		audioElement.pause();
-		// masterplay.classList.remove('fa-pause-circle');
-		// masterplay.classList.add('fa-play-circle');
+		masterplay.classList.remove('fa-pause-circle');
+		masterplay.classList.add('fa-play-circle');
 		gif.style.opacity = 0;
 	}
+}
+masterplay.addEventListener('click', () => {
+	playPauseCSS();
 });
 
-//listen to events
-audioElement.addEventListener('timeupdate', () => {
-	//seekbar
-	progress = parseInt(
-		(audioElement.currentTime / audioElement.duration) * 100
-	);
+//Progress Bar Update
+// audioElement.addEventListener('timeupdate', () => {
+// 	myprogressbar.value = parseInt(
+// 		(audioElement.currentTime / audioElement.duration) * 100
+// 	);
+// });
 
-	myprogressbar.value = progress;
-});
-
+//Progress Bar Click Action
 myprogressbar.addEventListener('change', () => {
-	// audioElement.currentTime=myprogressbar.value*audioElement.duration/100;
 	audioElement.currentTime =
 		(myprogressbar.value * audioElement.duration) / 100;
 });
 
-const makeallplays = () => {
-	//e.target.classList.add('fa-circle-pause fa-xl');
+const pauseAllOnScreen = () => {
 	Array.from(document.getElementsByClassName('songitemplay')).forEach(
 		(element) => {
-			element.classList.remove('fa-circle-pause');
+			console.log('pauseAll Called');
+			// element.classList.remove('fa-circle-pause');
 			element.classList.add('fa-circle-play');
 		}
 	);
@@ -140,7 +141,7 @@ Array.from(document.getElementsByClassName('songitemplay')).forEach(
 		element.addEventListener('click', (e) => {
 			// console.log('Song Play Button Clicked');
 			// console.log(e.target);
-			makeallplays();
+			// makeallplays();
 			songindex = parseInt(e.target.id);
 
 			e.target.classList.remove('fa-circle-play');
@@ -186,3 +187,9 @@ document.getElementById('previous').addEventListener('click', () => {
 	masterplay.classList.remove('fa-circle-play fa-xl');
 	masterplay.classList.add('fa-circle-pause fa-xl');
 });
+
+//INIT Calls
+window.onload = function () {
+	pauseAllOnScreen();
+};
+console.log('Hi');

@@ -1,0 +1,213 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,500&family=Playfair+Display&display=swap'); */
+
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
+:root{
+	--blackish: rgba(0, 0, 0,.5);
+	--font-primary: whitesmoke;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	color: var(--font-primary);
+	font-family: 'Varela Round', sans-serif;
+	font-weight: 600;
+}
+
+body {
+	object-fit: cover;
+	background-color: var(--blackish);
+	height: 100vh;
+	width: 100vw;
+}
+
+/* =================================================================================== */
+
+a{
+	text-decoration: none;
+	color: var(--font-primary);
+	width: 100%;
+	height: 100%;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: black;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(255, 255, 255,.1);
+  border-radius: 20px;
+  border: 3px solid black;
+}
+*::-webkit-scrollbar-thumb:hover {
+	cursor: pointer;
+	background-color: whitesmoke;
+}
+
+
+i:hover {
+	text-shadow: 2px 2px 4px white;
+}
+
+/* =================================================================================== */
+
+.container {
+	min-height: 65vh;
+	/* font-family: 'Playfair Display', serif; */
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	border-radius: 12px;
+}
+
+.background {
+	display: flex;
+	position: absolute;
+	z-index: -1;
+	height: 100vh;
+	width: 100vw;
+}
+
+.background > img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	backdrop-filter: contrast(50%);
+}
+
+nav {
+	/* font-family: 'Bricolage Grotesque', sans-serif; */
+	width: 100vw;
+	height: 10vh;
+	background-color: var(--blackish);
+	display: flex;
+	align-items: center;
+}
+nav ul {
+	display: flex;
+	align-items: center;
+	list-style-type: none;
+	height: 55px;
+	color: white;
+}
+.nav-item {
+	cursor: pointer;
+	padding: 5px 12px;
+}
+.nav-item:hover {
+	scale: 1.1;
+	transition: scale 0.2s ease;
+}
+.brand > img {
+	width: 44px;
+	border-radius: 50%;
+}
+.brand {
+	display: flex;
+	align-items: center;
+	font-weight: bolder;
+	font-size: 1.3rem;
+}
+
+/* ---------------------------------------------------------------------------- */
+
+.mid-body {
+	background-color: var(--blackish);
+	width: 40vw;
+	height: 66vh;
+	padding: 20px;
+	border-radius: 25px;
+	margin-left: 40px;
+	margin-top: 30px;
+	overflow: scroll;
+}
+
+/* ---------------------------------------------------------------------------- */
+
+.songitem {
+	display: flex;
+	height: 50px;
+	width: 100%;
+	margin: 12px 0;
+
+	background-color: rgb(0, 0, 0, 0.8);
+	color: rgb(255, 255, 255);
+	
+	font-size: medium;
+
+	justify-content: space-between;
+	align-items: center;
+	border-radius: 30px;
+}
+.songitem img {
+	margin: 0 2px;
+	width: 45px;
+	border-radius: 50%;
+}
+.song-metadata {
+	/* margin: 24px 0; */
+	padding-right: 10px;
+	/* font-size: medium; */
+	/* font-weight: 200; */
+}
+.timestamp {
+	/* margin: 0 23px; */
+}
+.song-metadata>i {
+	cursor: pointer;
+}
+.bottom {
+	color: white;
+	background-color: rgb(0, 0, 0, 0.5);
+	width: 100%;
+	height: 17vh;
+	position: fixed;
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+#myprogressbar {
+	width: 80vw;
+	cursor: pointer;
+}
+.icons {
+	margin-top: 15px;
+}
+.icons i {
+	cursor: pointer;
+	scale: 1.3;
+	margin: 0 10px;
+}
+
+.songinfo {
+	position: absolute;
+	left: 10vw;
+	font-family: 'Bricolage Grotesque', sans-serif;
+}
+.songinfo img {
+	opacity: 0;
+	transition: opacity 0.4s ease-in;
+}
+
+/* -------------------------------------- */
+.about-heading{
+	font-size:xxx-large;
+}
+.about-para{
+	padding: 5px 0px;
+	font-size: larger;
+	font-weight: 500;
+}
+.first-para{
+	padding-top: 8px;
+}
