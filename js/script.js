@@ -138,6 +138,16 @@ myprogressbar.addEventListener('change', () => {
 		(myprogressbar.value * audioElement.duration) / 100;
 });
 
+audioElement.addEventListener('timeupdate', function () {
+	const current_time = audio.currentTime;
+	const duration_time = audio.duration;
+
+	if (!isNaN(duration_time)) {
+		const percentage = current_time / duration_time / 100;
+		myprogressbar.value = percentage;
+	}
+});
+
 //change all songs CSS to paused
 function pauseAll() {
 	Array.from(document.getElementsByClassName('songitemplay')).forEach(
@@ -166,7 +176,14 @@ function songAction(songID) {
 		e.classList.remove('fa-circle-play');
 		e.classList.add('fa-circle-pause');
 		pausePlayer();
+		temp_src = audioElement.src;
+		temp_time = audioElement.currentTime;
 		audioElement.src = 'songs/' + songID + '.mp3';
+		if (temp_src == audioElement.src) {
+			audioElement.currentTime = temp_time;
+		} else {
+			myprogressbar.value = 0;
+		}
 		songindex = parseInt(songID.charAt(songID.length - 1), 10);
 		console.log(songindex);
 		mastersongname.innerText = songs_1[songindex].songname;
@@ -182,6 +199,7 @@ function nextAction() {
 		songindex += 1;
 	}
 
+	myprogressbar.value = 0;
 	pauseAll();
 	let elem = document.getElementById('10' + songindex);
 	elem.classList.remove('fa-circle-play');
@@ -202,6 +220,7 @@ function previousAction() {
 		songindex -= 1;
 	}
 
+	myprogressbar.value = 0;
 	pauseAll();
 	let elem = document.getElementById('10' + songindex);
 	elem.classList.remove('fa-circle-play');
