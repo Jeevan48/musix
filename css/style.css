@@ -12,6 +12,8 @@
 	color: var(--font-primary);
 	font-family: 'Varela Round', sans-serif;
 	font-weight: 600;
+	transition: all 0.5s ease-out;
+	transition: width 0.5s ease-out;
 }
 
 body {
@@ -179,11 +181,6 @@ nav ul {
 	align-items: center;
 }
 
-#myprogressbar {
-	width: 80vw;
-	cursor: pointer;
-}
-
 .icons {
 	margin-top: 15px;
 }
@@ -219,4 +216,32 @@ nav ul {
 
 .first-para {
 	padding-top: 8px;
+}
+
+/* ----------------------------------------- */
+
+#progressbar-container {
+	display: flex;
+	width: 80vw;
+	height: 5px;
+	background-color: whitesmoke;
+	margin-bottom: 20px;
+	padding: 0;
+	cursor: pointer;
+	border-radius: 20px;
+	overflow: hidden;
+}
+
+#progressbar-container:hover {
+	box-shadow: 0 0 5px whitesmoke;
+}
+
+#myprogressbar {
+	display: flex;
+	margin: 0;
+	width: 50%;
+	height: 100%;
+	background-color: blue;
+	border-right: 10px solid red;
+	border-radius: 20px;
 }

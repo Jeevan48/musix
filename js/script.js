@@ -2,10 +2,11 @@ console.log('Welcome to Musix!');
 
 // Variables Initialization
 let songindex = 0; //stored index no of current song
-let audioElement = new Audio('songs/1.mp3'); //stores the current song
-let masterplay = document.getElementById('masterplay'); //the master play button
-let myprogressbar = document.getElementById('myprogressbar'); //song progress bar
-let gif = document.getElementById('gif'); //music play/pause visualizer
+let audioElement = new Audio('songs/100.mp3'); //stores the current song
+const masterplay = document.getElementById('masterplay'); //the master play button
+const progressBarContainer = document.getElementById('progressbar-container');
+const myprogressbar = document.getElementById('myprogressbar'); //song progress bar
+const gif = document.getElementById('gif'); //music play/pause visualizer
 let mastersongname = document.getElementById('mastersongname'); //current song name
 let playlist = '10'; //stores playlist no
 
@@ -132,21 +133,32 @@ function masterPlayAction() {
 	}
 }
 
-//Progress Bar Click Action
-myprogressbar.addEventListener('change', () => {
-	audioElement.currentTime =
-		(myprogressbar.value * audioElement.duration) / 100;
+progressBarContainer.addEventListener('click', function (event) {
+	const clickPositionX =
+		event.clientX - progressBarContainer.getBoundingClientRect().left;
+	const containerWidth = progressBarContainer.clientWidth;
+
+	const clickPercentage = (clickPositionX / containerWidth) * 100;
+	const newTime = (clickPercentage / 100) * audioElement.duration;
+
+	audioElement.currentTime = newTime;
+
+	myprogressbar.style.width = clickPercentage + '%';
 });
 
-audioElement.addEventListener('timeupdate', function () {
-	const current_time = audio.currentTime;
-	const duration_time = audio.duration;
+// audioElement.addEventListener('timeupdate', function ()
+function updatePlayerBar() {
+	const current_time = audioElement.currentTime;
+	const duration_time = audioElement.duration;
 
 	if (!isNaN(duration_time)) {
-		const percentage = current_time / duration_time / 100;
-		myprogressbar.value = percentage;
+		const percentage = (current_time / duration_time) * 100;
+		myprogressbar.style.width = percentage + '%';
+	} else {
+		myprogressbar.style.width = '0%';
 	}
-});
+}
+const playerBarRepeat = setInterval(updatePlayerBar, 1000);
 
 //change all songs CSS to paused
 function pauseAll() {
