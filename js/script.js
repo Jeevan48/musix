@@ -4,9 +4,9 @@ console.log('Welcome to Musix!');
 let songindex = 0; //stored index no of current song
 let audioElement = new Audio('songs/100.mp3'); //stores the current song
 const masterplay = document.getElementById('masterplay'); //the master play button
-const progressBarContainer = document.getElementById('progressbar-container');
-const myprogressbar = document.getElementById('myprogressbar'); //song progress bar
-const gif = document.getElementById('gif'); //music play/pause visualizer
+const progressBarContainer = document.getElementById('progress-bar-container');
+const progressBar = document.getElementById('progress-bar'); //song progress bar
+// const gif = document.getElementById('gif'); //music play/pause visualizer
 let mastersongname = document.getElementById('mastersongname'); //current song name
 let playlist = '10'; //stores playlist no
 
@@ -96,7 +96,7 @@ function playPlayer() {
 		masterplay.classList.remove('fa-play-circle');
 		masterplay.classList.add('fa-pause-circle');
 		audioElement.play();
-		gif.style.opacity = 1;
+		// gif.style.opacity = 1;
 	}
 }
 
@@ -105,7 +105,7 @@ function pausePlayer() {
 		audioElement.pause();
 		masterplay.classList.remove('fa-pause-circle');
 		masterplay.classList.add('fa-play-circle');
-		gif.style.opacity = 0;
+		// gif.style.opacity = 0;
 	}
 }
 
@@ -114,7 +114,7 @@ function masterPlayAction() {
 		masterplay.classList.remove('fa-play-circle');
 		masterplay.classList.add('fa-pause-circle');
 		audioElement.play();
-		gif.style.opacity = 1;
+		// gif.style.opacity = 1;
 
 		pauseAll();
 		let elem = document.getElementById('10' + songindex);
@@ -124,7 +124,7 @@ function masterPlayAction() {
 		audioElement.pause();
 		masterplay.classList.remove('fa-pause-circle');
 		masterplay.classList.add('fa-play-circle');
-		gif.style.opacity = 0;
+		// gif.style.opacity = 0;
 
 		pauseAll();
 		let elem = document.getElementById('10' + songindex);
@@ -143,7 +143,13 @@ progressBarContainer.addEventListener('click', function (event) {
 
 	audioElement.currentTime = newTime;
 
-	myprogressbar.style.width = clickPercentage + '%';
+	progressBar.style.width = clickPercentage + '%';
+});
+
+audioElement.addEventListener('ended', function () {
+	if (songindex < songs_1.length - 1) {
+		nextAction();
+	}
 });
 
 // audioElement.addEventListener('timeupdate', function ()
@@ -153,9 +159,9 @@ function updatePlayerBar() {
 
 	if (!isNaN(duration_time)) {
 		const percentage = (current_time / duration_time) * 100;
-		myprogressbar.style.width = percentage + '%';
+		progressBar.style.width = percentage + '%';
 	} else {
-		myprogressbar.style.width = '0%';
+		progressBar.style.width = '0%';
 	}
 }
 const playerBarRepeat = setInterval(updatePlayerBar, 1000);
@@ -194,7 +200,7 @@ function songAction(songID) {
 		if (temp_src == audioElement.src) {
 			audioElement.currentTime = temp_time;
 		} else {
-			myprogressbar.value = 0;
+			progressBar.value = 0;
 		}
 		songindex = parseInt(songID.charAt(songID.length - 1), 10);
 		console.log(songindex);
@@ -211,7 +217,7 @@ function nextAction() {
 		songindex += 1;
 	}
 
-	myprogressbar.value = 0;
+	progressBar.value = 0;
 	pauseAll();
 	let elem = document.getElementById('10' + songindex);
 	elem.classList.remove('fa-circle-play');
@@ -232,7 +238,7 @@ function previousAction() {
 		songindex -= 1;
 	}
 
-	myprogressbar.value = 0;
+	progressBar.value = 0;
 	pauseAll();
 	let elem = document.getElementById('10' + songindex);
 	elem.classList.remove('fa-circle-play');
