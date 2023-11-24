@@ -1,5 +1,6 @@
 # To-Do (Latest to oldest)
 
+-   add links in website (git repo, developers socials)
 -   when clicking on prev, if song has played more than 5 seconds, play the same song from start
 -   add autoplay next toggle button, and repeat mode change button in additional controls
 -   update colors (primary, secondary, accent)
