@@ -93,39 +93,30 @@ function loadHTML(className, fileName) {
 //Play Pause methods
 function playPlayer() {
 	if (audioElement.paused || audioElement.currentTime <= 0) {
-		masterplay.classList.remove('fa-play-circle');
-		masterplay.classList.add('fa-pause-circle');
 		audioElement.play();
-		// gif.style.opacity = 1;
+		return true;
+	} else {
+		return false;
 	}
 }
 
 function pausePlayer() {
 	if (audioElement.played && audioElement.currentTime > 0) {
 		audioElement.pause();
-		masterplay.classList.remove('fa-pause-circle');
-		masterplay.classList.add('fa-play-circle');
-		// gif.style.opacity = 0;
+		return true;
+	} else {
+		return false;
 	}
 }
 
 function masterPlayAction() {
-	if (audioElement.paused || audioElement.currentTime <= 0) {
-		masterplay.classList.remove('fa-play-circle');
-		masterplay.classList.add('fa-pause-circle');
-		audioElement.play();
-		// gif.style.opacity = 1;
-
+	if (playPlayer()) {
 		pauseAll();
 		let elem = document.getElementById('10' + songindex);
 		elem.classList.remove('fa-circle-play');
 		elem.classList.add('fa-circle-pause');
 	} else {
-		audioElement.pause();
-		masterplay.classList.remove('fa-pause-circle');
-		masterplay.classList.add('fa-play-circle');
-		// gif.style.opacity = 0;
-
+		pausePlayer();
 		pauseAll();
 		let elem = document.getElementById('10' + songindex);
 		elem.classList.remove('fa-circle-pause');
@@ -152,6 +143,36 @@ audioElement.addEventListener('ended', function () {
 	}
 });
 
+//automatically update play pause button depending on audio state
+audioElement.addEventListener('play', function () {
+	masterplay.classList.remove('fa-play-circle');
+	masterplay.classList.add('fa-pause-circle');
+});
+audioElement.addEventListener('pause', function () {
+	masterplay.classList.remove('fa-pause-circle');
+	masterplay.classList.add('fa-play-circle');
+});
+
+document.addEventListener('keydown', function (event) {
+	if (
+		event.code === 'MediaPlayPause' ||
+		event.code === 'Space' ||
+		event.code === 'KeyK'
+	) {
+		event.preventDefault();
+		console.log('Play/Pause button pressed');
+		masterPlayAction();
+	} else if (event.code === 'MediaTrackPrevious' || event.code === 'KeyJ') {
+		event.preventDefault();
+		console.log('Previous button pressed');
+		previousAction();
+	} else if (event.code === 'MediaTrackNext' || event.code === 'KeyL') {
+		event.preventDefault();
+		console.log('Next button pressed');
+		nextAction();
+	}
+});
+
 // audioElement.addEventListener('timeupdate', function ()
 function updatePlayerBar() {
 	const current_time = audioElement.currentTime;
@@ -164,7 +185,7 @@ function updatePlayerBar() {
 		progressBar.style.width = '0%';
 	}
 }
-const playerBarRepeat = setInterval(updatePlayerBar, 1000);
+const playerBarRepeat = setInterval(updatePlayerBar, 100);
 
 //change all songs CSS to paused
 function pauseAll() {

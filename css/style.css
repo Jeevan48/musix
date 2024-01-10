@@ -265,3 +265,23 @@ nav ul {
 .beta-features * {
 	color: gray;
 }
+
+/* when screen size is less than 830 pixels */
+@media screen and (max-width: 830px) {
+	.mid-body {
+		width: 80vw;
+		margin: auto;
+		border-radius: 0;
+		margin-top: 40px;
+	}
+	.additional-controls {
+		display: none;
+	}
+	.song-info {
+		display: none;
+	}
+	.controls {
+		display: flex;
+		justify-content: center;
+	}
+}
