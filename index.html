@@ -17,11 +17,15 @@
     <div class="container">
         <nav>
             <ul>
-                <li class="brand nav-item" onclick="loadHTML('mid-body','home.html')"><img src="media/logo2.png"
-                        alt="Musix">Musix</li>
-                <li class="nav-item" onclick="loadHTML('mid-body','explore.html')">Explore</li>
-                <li class="nav-item" onclick="loadHTML('mid-body','home.html')">Player</li>
-                <li class="nav-item" onclick="loadHTML('mid-body','aboutUs.html')">About Us</li>
+                <li class="brand nav-item clickable clickable-text text" onclick="loadHTML('mid-body','home.html')"><img
+                        src="media/logo2.png" alt="Musix">Musix</li>
+                <li class="nav-item clickable clickable-text text" onclick="loadHTML('mid-body','explore.html')">Explore
+                </li>
+                <li class="nav-item clickable clickable-text text" onclick="loadHTML('mid-body','home.html')">Player
+                </li>
+                <li class="nav-item clickable clickable-text text" onclick="loadHTML('mid-body','aboutUs.html')">About
+                    Us
+                </li>
             </ul>
         </nav>
         <div class="mid-body">
@@ -29,25 +33,28 @@
         </div>
     </div>
     <div class="player-dashboard">
-        <div id="progress-bar-container">
+        <div id="progress-bar-container" class="clickable clickable-box box">
             <div id="progress-bar"></div>
         </div>
         <div class="controls">
             <div class="song-info">
-                <!-- <img src="./media/music.gif" width="55px" height="20px" id="gif"> -->
-                <span id="duration-passed" class="beta-features"
+                <span id="duration-passed" class="inactive-item"
                     title="This feature is currently in making">00:00</span>
                 |
-                <span id="mastersongname">Kantara</span>
+                <span id="master-song-name">Kantara</span>
             </div>
             <div class="player-controls">
-                <i class="fa-solid fa-backward fa-xl" id="previous" onclick="previousAction()" title="previous (J)"></i>
-                <i class="fa-regular fa-circle-play fa-xl" id="masterplay" onclick="masterPlayAction()"
-                    title="play/pause (Space or K)"></i>
-                <i class="fa-solid fa-forward fa-xl" id="next" onclick="nextAction()" title="next (L)"></i>
+                <i class="fa-solid fa-backward fa-xl active-item clickable clickable-text text" id="prev-btn"
+                    onclick="previousAction()" title="previous (J)"></i>
+                <i class="fa-regular fa-circle-play fa-xl active-item clickable clickable-text text"
+                    id="master-play-btn" onclick="masterPlayAction()" title="play/pause (Space or K)"></i>
+                <i class="fa-solid fa-forward fa-xl active-item clickable clickable-text text" id="next-btn"
+                    onclick="nextAction()" title="next (L)"></i>
             </div>
-            <div class="additional-controls beta-features" title="This feature is currently in making">
-                <p>Additional Controls</p>
+            <div class="additional-controls" title="This feature is currently in making">
+                <!-- <p>Additional Controls</p> -->
+                <i class="fa-solid fa-repeat fa-xl inactive-item clickable clickable-text text" id="toggle-repeat-btn"
+                    onclick="toggleRepeat()" title="Toggle Repeat (R)"></i>
             </div>
         </div>
     </div>

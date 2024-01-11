@@ -1,14 +1,19 @@
-console.log('Welcome to Musix!');
+// Getting Elements
+const AudioElement = new Audio('songs/100.mp3'); //stores the current song
+const MasterPlayButton = document.getElementById('master-play-btn'); //the master play button
+const PreviousButton = document.getElementById('prev-btn'); //previous button
+const NextButton = document.getElementById('next-btn'); //previous button
+const ProgressBarContainer = document.getElementById('progress-bar-container');
+const ProgressBar = document.getElementById('progress-bar'); //song progress bar
+let MasterSongName = document.getElementById('master-song-name'); //current song name
+let ToggleRepeatButton = document.getElementById('toggle-repeat-btn'); //toggle repeat button
 
-// Variables Initialization
-let songindex = 0; //stored index no of current song
-let audioElement = new Audio('songs/100.mp3'); //stores the current song
-const masterplay = document.getElementById('masterplay'); //the master play button
-const progressBarContainer = document.getElementById('progress-bar-container');
-const progressBar = document.getElementById('progress-bar'); //song progress bar
-// const gif = document.getElementById('gif'); //music play/pause visualizer
-let mastersongname = document.getElementById('mastersongname'); //current song name
-let playlist = '10'; //stores playlist no
+//player parameters
+const playlist = '10'; //stores playlist no
+let currentSongIndex = 0; //stored index no of current song
+let repeatMode = 2; //0=repeat off, 1=repeat one, 2=repeat all
+let shuffleMode = 0; //0=shuffle off, 1=shuffle on
+let autoplayMode = true; //to control if next song should play automatically or not
 
 let songs_1 = [
 	{
@@ -92,8 +97,8 @@ function loadHTML(className, fileName) {
 
 //Play Pause methods
 function playPlayer() {
-	if (audioElement.paused || audioElement.currentTime <= 0) {
-		audioElement.play();
+	if (AudioElement.paused || AudioElement.currentTime <= 0) {
+		AudioElement.play();
 		return true;
 	} else {
 		return false;
@@ -101,56 +106,258 @@ function playPlayer() {
 }
 
 function pausePlayer() {
-	if (audioElement.played && audioElement.currentTime > 0) {
-		audioElement.pause();
+	if (AudioElement.played && AudioElement.currentTime > 0) {
+		AudioElement.pause();
 		return true;
 	} else {
 		return false;
 	}
 }
 
+//change all songs CSS to show as 'paused'
+function resetList() {
+	Array.from(document.getElementsByClassName('songitemplay')).forEach(
+		(element) => {
+			// console.log('resetList Called');
+			element.classList.remove('fa-circle-pause');
+			element.classList.add('fa-circle-play');
+		}
+	);
+}
+
+//change the specific song's CSS from list to show as 'playing'
+function showPlayingInList(songIndexIn) {
+	resetList();
+	let elem = document.getElementById('10' + songIndexIn);
+	elem.classList.remove('fa-circle-play');
+	elem.classList.add('fa-circle-pause');
+}
+
+//when master play button clicked
 function masterPlayAction() {
 	if (playPlayer()) {
-		pauseAll();
-		let elem = document.getElementById('10' + songindex);
-		elem.classList.remove('fa-circle-play');
-		elem.classList.add('fa-circle-pause');
+		showPlayingInList(currentSongIndex);
 	} else {
 		pausePlayer();
-		pauseAll();
-		let elem = document.getElementById('10' + songindex);
-		elem.classList.remove('fa-circle-pause');
-		elem.classList.add('fa-circle-play');
+		resetList();
 	}
 }
 
-progressBarContainer.addEventListener('click', function (event) {
+// AudioElement.addEventListener('timeupdate', function ()
+function updatePlayerBar() {
+	const current_time = AudioElement.currentTime;
+	const duration_time = AudioElement.duration;
+
+	if (!isNaN(duration_time)) {
+		const percentage = (current_time / duration_time) * 100;
+		ProgressBar.style.width = percentage + '%';
+	} else {
+		ProgressBar.style.width = '0%';
+	}
+}
+
+//song clicked method
+function songAction(songID) {
+	// console.log(`songAction called on song ${songID}`);
+	e = document.getElementById(songID);
+	// console.log(e);
+	//isAlreadyPlaying
+	if (e.classList.contains('fa-circle-pause')) {
+		// console.log('a song was playing...pausing it...');
+		resetList();
+		// e.classList.remove('fa-circle-pause');
+		// e.classList.add('fa-circle-play');
+		pausePlayer();
+	} else {
+		// resetList();
+		// console.log('that song was not playing...playing it...');
+		// e.classList.remove('fa-circle-play');
+		// e.classList.add('fa-circle-pause');
+		pausePlayer();
+		let indexIn = parseInt(songID.charAt(songID.length - 1), 10);
+		// console.log(indexIn);
+		updateSong(indexIn);
+		showPlayingInList(indexIn);
+		playPlayer();
+		// updateIcons();
+	}
+}
+
+function replayCurrentSong() {
+	pausePlayer();
+	AudioElement.currentTime = 0;
+	playPlayer();
+}
+
+//update audio source
+function updateSong(indexIn) {
+	if (currentSongIndex != indexIn) {
+		currentSongIndex = indexIn;
+		let newSrc = `songs/10${currentSongIndex}.mp3`;
+		AudioElement.src = newSrc;
+		AudioElement.currentTime = 0;
+		ProgressBar.value = 0;
+		MasterSongName.innerText = songs_1[currentSongIndex].songname;
+	}
+}
+
+//disable an element (no click no hover)
+function disableItem(Item) {
+	Item.classList.add('disabled');
+
+	Item.classList.remove('active-item');
+	Item.classList.add('inactive-item');
+
+	Item.classList.remove('clickable');
+	Item.classList.remove('clickable-text');
+	Item.classList.remove('clickable-box');
+}
+
+//enable an element (clickable and hoverable)
+function enableItem(Item) {
+	Item.classList.remove('disabled');
+
+	Item.classList.remove('inactive-item');
+	Item.classList.add('active-item');
+
+	Item.classList.add('clickable');
+	if (Item.classList.contains('text')) {
+		Item.classList.add('clickable-text');
+	}
+	if (Item.classList.contains('box')) {
+		Item.classList.add('clickable-box');
+	}
+}
+
+function updateIcons() {
+	if (currentSongIndex == 0 && repeatMode == 0) {
+		disableItem(PreviousButton);
+	} else {
+		enableItem(PreviousButton);
+	}
+	if (currentSongIndex == songs_1.length - 1 && repeatMode == 0) {
+		disableItem(NextButton);
+	} else {
+		enableItem(NextButton);
+	}
+
+	//changing repeat mode icon
+	if (repeatMode == 0) {
+		ToggleRepeatButton.classList.remove('active-item');
+		ToggleRepeatButton.classList.add('inactive-item');
+		ToggleRepeatButton.innerText = '';
+		console.log('Repeat Off');
+	} else if (repeatMode == 1 || repeatMode == 2) {
+		ToggleRepeatButton.classList.remove('inactive-item');
+		ToggleRepeatButton.classList.add('active-item');
+		if (repeatMode == 1) {
+			ToggleRepeatButton.innerText = '1';
+			console.log('Repeat One');
+		} else if (repeatMode == 2) {
+			ToggleRepeatButton.innerText = '';
+			console.log('Repeat All');
+		}
+	} else {
+		console.error('Error in Switching Repeat Mode.');
+	}
+}
+
+//next clicked
+function nextAction() {
+	console.log('nextAction Called...');
+	let tempIndex = currentSongIndex;
+	if (repeatMode == 1) {
+		replayCurrentSong();
+		return;
+	} else if (repeatMode == 2 && tempIndex == songs_1.length - 1) {
+		tempIndex = 0;
+	} else if (tempIndex < songs_1.length - 1) {
+		tempIndex += 1;
+	} else {
+		return;
+	}
+	ProgressBar.value = 0;
+
+	pausePlayer();
+	updateSong(tempIndex);
+	playPlayer();
+
+	resetList();
+	showPlayingInList(tempIndex);
+
+	// updateIcons();
+}
+
+//previous clicked
+function previousAction() {
+	let tempIndex = currentSongIndex;
+	console.log('previousAction Called...');
+	if (repeatMode == 1) {
+		replayCurrentSong();
+		return;
+	} else if (repeatMode == 2 && tempIndex == 0) {
+		tempIndex = songs_1.length - 1;
+	} else if (tempIndex > 0) {
+		tempIndex -= 1;
+	} else {
+		return;
+	}
+	ProgressBar.value = 0;
+
+	pausePlayer();
+	updateSong(tempIndex);
+	playPlayer();
+
+	resetList();
+	showPlayingInList(tempIndex);
+}
+
+function toggleRepeatTo(newRepeat) {
+	repeatMode = newRepeat % 3;
+	updateIcons();
+}
+
+function toggleRepeat() {
+	toggleRepeatTo(repeatMode + 1);
+}
+
+ProgressBarContainer.addEventListener('click', function (event) {
 	const clickPositionX =
-		event.clientX - progressBarContainer.getBoundingClientRect().left;
-	const containerWidth = progressBarContainer.clientWidth;
+		event.clientX - ProgressBarContainer.getBoundingClientRect().left;
+	const containerWidth = ProgressBarContainer.clientWidth;
 
 	const clickPercentage = (clickPositionX / containerWidth) * 100;
-	const newTime = (clickPercentage / 100) * audioElement.duration;
+	const newTime = (clickPercentage / 100) * AudioElement.duration;
 
-	audioElement.currentTime = newTime;
+	AudioElement.currentTime = newTime;
 
-	progressBar.style.width = clickPercentage + '%';
-});
-
-audioElement.addEventListener('ended', function () {
-	if (songindex < songs_1.length - 1) {
-		nextAction();
-	}
+	ProgressBar.style.width = clickPercentage + '%';
 });
 
 //automatically update play pause button depending on audio state
-audioElement.addEventListener('play', function () {
-	masterplay.classList.remove('fa-play-circle');
-	masterplay.classList.add('fa-pause-circle');
+AudioElement.addEventListener('play', function () {
+	MasterPlayButton.classList.remove('fa-play-circle');
+	MasterPlayButton.classList.add('fa-pause-circle');
+	updateIcons();
 });
-audioElement.addEventListener('pause', function () {
-	masterplay.classList.remove('fa-pause-circle');
-	masterplay.classList.add('fa-play-circle');
+
+AudioElement.addEventListener('pause', function () {
+	MasterPlayButton.classList.remove('fa-pause-circle');
+	MasterPlayButton.classList.add('fa-play-circle');
+	updateIcons();
+});
+
+AudioElement.addEventListener('ended', function () {
+	if (autoplayMode && repeatMode != 0) {
+		if (repeatMode == 1) {
+			AudioElement.currentTime = 0;
+			playPlayer();
+		} else if (repeatMode == 2) {
+			nextAction();
+		} else {
+			console.error('Error while playing next song automatically');
+		}
+	}
 });
 
 document.addEventListener('keydown', function (event) {
@@ -171,108 +378,20 @@ document.addEventListener('keydown', function (event) {
 		console.log('Next button pressed');
 		nextAction();
 	}
+	//ISSUE
+	// else if (
+	// 	(event.code =
+	// 		'KeyR' && event.code != 'altLeft' && event.code != 'altRight')
+	// ) {
+	// 	event.preventDefault();
+	// 	console.log('Toggle Repeat Clicked');
+	// 	toggleRepeat();
+	// }
 });
-
-// audioElement.addEventListener('timeupdate', function ()
-function updatePlayerBar() {
-	const current_time = audioElement.currentTime;
-	const duration_time = audioElement.duration;
-
-	if (!isNaN(duration_time)) {
-		const percentage = (current_time / duration_time) * 100;
-		progressBar.style.width = percentage + '%';
-	} else {
-		progressBar.style.width = '0%';
-	}
-}
-const playerBarRepeat = setInterval(updatePlayerBar, 100);
-
-//change all songs CSS to paused
-function pauseAll() {
-	Array.from(document.getElementsByClassName('songitemplay')).forEach(
-		(element) => {
-			console.log('pauseAll Called');
-			element.classList.remove('fa-circle-pause');
-			element.classList.add('fa-circle-play');
-		}
-	);
-}
-
-//song clicked method
-function songAction(songID) {
-	e = document.getElementById(songID);
-	//isAlreadyPlaying
-	if (e.classList.contains('fa-circle-pause')) {
-		console.log('a song was playing...pausing it...');
-		e.classList.remove('fa-circle-pause');
-		e.classList.add('fa-circle-play');
-		pausePlayer();
-	}
-	//isPaused
-	else {
-		pauseAll();
-		console.log('a song was paused...playing it...');
-		e.classList.remove('fa-circle-play');
-		e.classList.add('fa-circle-pause');
-		pausePlayer();
-		temp_src = audioElement.src;
-		temp_time = audioElement.currentTime;
-		audioElement.src = 'songs/' + songID + '.mp3';
-		if (temp_src == audioElement.src) {
-			audioElement.currentTime = temp_time;
-		} else {
-			progressBar.value = 0;
-		}
-		songindex = parseInt(songID.charAt(songID.length - 1), 10);
-		console.log(songindex);
-		mastersongname.innerText = songs_1[songindex].songname;
-		playPlayer();
-	}
-}
-
-//next clicked
-function nextAction() {
-	if (songindex >= 5) {
-		songindex = 0;
-	} else {
-		songindex += 1;
-	}
-
-	progressBar.value = 0;
-	pauseAll();
-	let elem = document.getElementById('10' + songindex);
-	elem.classList.remove('fa-circle-play');
-	elem.classList.add('fa-circle-pause');
-
-	pausePlayer();
-	audioElement.src = `songs/10${songindex}.mp3`;
-	mastersongname.innerText = songs_1[songindex].songname;
-	audioElement.currentTime = 0;
-	playPlayer();
-}
-
-//previous clicked
-function previousAction() {
-	if (songindex <= 0) {
-		songindex = 0;
-	} else {
-		songindex -= 1;
-	}
-
-	progressBar.value = 0;
-	pauseAll();
-	let elem = document.getElementById('10' + songindex);
-	elem.classList.remove('fa-circle-play');
-	elem.classList.add('fa-circle-pause');
-
-	pausePlayer();
-	audioElement.src = `songs/10${songindex}.mp3`;
-	mastersongname.innerText = songs_1[songindex].songname;
-	audioElement.currentTime = 0;
-	playPlayer();
-}
 
 //INIT Calls
 window.onload = function () {
 	console.log('Website fully loaded');
+	const playerBarRepeat = setInterval(updatePlayerBar, 100);
+	updateIcons();
 };
