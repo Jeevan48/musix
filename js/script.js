@@ -9,7 +9,7 @@ let MasterSongName = document.getElementById('master-song-name'); //current song
 let ToggleRepeatButton = document.getElementById('toggle-repeat-btn'); //toggle repeat button
 
 //player parameters
-const playlist = '10'; //stores playlist no
+const playlistNo = '10'; //stores playlist no
 let currentSongIndex = 0; //stored index no of current song
 let repeatMode = 2; //0=repeat off, 1=repeat one, 2=repeat all
 let shuffleMode = 0; //0=shuffle off, 1=shuffle on
@@ -17,33 +17,33 @@ let autoplayMode = true; //to control if next song should play automatically or 
 
 let songs_1 = [
 	{
-		songname: 'Kantara',
-		filepath: 'songs/1.mp3',
+		songName: 'Dil Nu',
+		filePath: 'songs/1.mp3',
 		coverPath: 'media/covers/1.jpg',
 	},
 	{
-		songname: 'Dil Nu',
-		filepath: 'songs/2.mp3',
+		songName: 'Kantara',
+		filePath: 'songs/2.mp3',
 		coverPath: 'media/covers/2.jpg',
 	},
 	{
-		songname: 'Tere Hawale',
-		filepath: 'songs/3.mp3',
+		songName: 'Tere Hawale',
+		filePath: 'songs/3.mp3',
 		coverPath: 'media/covers/3.jpg',
 	},
 	{
-		songname: 'Kahani Suno',
-		filepath: 'songs/4.mp3',
+		songName: 'Kahani Suno',
+		filePath: 'songs/4.mp3',
 		coverPath: 'media/covers/4.jpg',
 	},
 	{
-		songname: 'Heeriye',
-		filepath: 'songs/5.mp3',
+		songName: 'Heeriye',
+		filePath: 'songs/5.mp3',
 		coverPath: 'media/covers/5.jpg',
 	},
 	{
-		songname: 'Udd Ja Kaale Kawan',
-		filepath: 'songs/6.mp3',
+		songName: 'Udd Ja Kaale Kawan',
+		filePath: 'songs/6.mp3',
 		coverPath: 'media/covers/6.jpg',
 	},
 ];
@@ -95,7 +95,7 @@ function loadHTML(className, fileName) {
 	}
 }
 
-//Play Pause methods
+//Play Media
 function playPlayer() {
 	if (AudioElement.paused || AudioElement.currentTime <= 0) {
 		AudioElement.play();
@@ -105,6 +105,7 @@ function playPlayer() {
 	}
 }
 
+//Pause Media
 function pausePlayer() {
 	if (AudioElement.played && AudioElement.currentTime > 0) {
 		AudioElement.pause();
@@ -197,7 +198,7 @@ function updateSong(indexIn) {
 		AudioElement.src = newSrc;
 		AudioElement.currentTime = 0;
 		ProgressBar.value = 0;
-		MasterSongName.innerText = songs_1[currentSongIndex].songname;
+		MasterSongName.innerText = songs_1[currentSongIndex].songName;
 	}
 }
 
@@ -229,6 +230,7 @@ function enableItem(Item) {
 	}
 }
 
+//update content on page (that depend on state of the player)
 function updateIcons() {
 	if (currentSongIndex == 0 && repeatMode == 0) {
 		disableItem(PreviousButton);
@@ -246,23 +248,23 @@ function updateIcons() {
 		ToggleRepeatButton.classList.remove('active-item');
 		ToggleRepeatButton.classList.add('inactive-item');
 		ToggleRepeatButton.innerText = '';
-		console.log('Repeat Off');
+		// console.log('Repeat Off');
 	} else if (repeatMode == 1 || repeatMode == 2) {
 		ToggleRepeatButton.classList.remove('inactive-item');
 		ToggleRepeatButton.classList.add('active-item');
 		if (repeatMode == 1) {
 			ToggleRepeatButton.innerText = '1';
-			console.log('Repeat One');
+			// console.log('Repeat One');
 		} else if (repeatMode == 2) {
 			ToggleRepeatButton.innerText = '';
-			console.log('Repeat All');
+			// console.log('Repeat All');
 		}
 	} else {
 		console.error('Error in Switching Repeat Mode.');
 	}
 }
 
-//next clicked
+//next button click actions
 function nextAction() {
 	console.log('nextAction Called...');
 	let tempIndex = currentSongIndex;
@@ -288,7 +290,7 @@ function nextAction() {
 	// updateIcons();
 }
 
-//previous clicked
+//previous button click actions
 function previousAction() {
 	let tempIndex = currentSongIndex;
 	console.log('previousAction Called...');
@@ -312,15 +314,18 @@ function previousAction() {
 	showPlayingInList(tempIndex);
 }
 
+//toggle Repeat Mode to a specific mode
 function toggleRepeatTo(newRepeat) {
 	repeatMode = newRepeat % 3;
 	updateIcons();
 }
 
+//toggle Repeat Mode
 function toggleRepeat() {
 	toggleRepeatTo(repeatMode + 1);
 }
 
+//Progress Bar Click Event
 ProgressBarContainer.addEventListener('click', function (event) {
 	const clickPositionX =
 		event.clientX - ProgressBarContainer.getBoundingClientRect().left;
@@ -334,19 +339,23 @@ ProgressBarContainer.addEventListener('click', function (event) {
 	ProgressBar.style.width = clickPercentage + '%';
 });
 
-//automatically update play pause button depending on audio state
+/* EVENT LISTENERS */
+
+//Audio Play Event
 AudioElement.addEventListener('play', function () {
 	MasterPlayButton.classList.remove('fa-play-circle');
 	MasterPlayButton.classList.add('fa-pause-circle');
 	updateIcons();
 });
 
+//Audio Pause Event
 AudioElement.addEventListener('pause', function () {
 	MasterPlayButton.classList.remove('fa-pause-circle');
 	MasterPlayButton.classList.add('fa-play-circle');
 	updateIcons();
 });
 
+//Audio End Event
 AudioElement.addEventListener('ended', function () {
 	if (autoplayMode && repeatMode != 0) {
 		if (repeatMode == 1) {
@@ -358,8 +367,10 @@ AudioElement.addEventListener('ended', function () {
 			console.error('Error while playing next song automatically');
 		}
 	}
+	updateIcons();
 });
 
+//Keyboard Controls
 document.addEventListener('keydown', function (event) {
 	if (
 		event.code === 'MediaPlayPause' ||
@@ -377,21 +388,17 @@ document.addEventListener('keydown', function (event) {
 		event.preventDefault();
 		console.log('Next button pressed');
 		nextAction();
+	} else if (event.code == 'KeyR') {
+		event.preventDefault();
+		console.log('Toggle Repeat Clicked');
+		toggleRepeat();
 	}
-	//ISSUE
-	// else if (
-	// 	(event.code =
-	// 		'KeyR' && event.code != 'altLeft' && event.code != 'altRight')
-	// ) {
-	// 	event.preventDefault();
-	// 	console.log('Toggle Repeat Clicked');
-	// 	toggleRepeat();
-	// }
+	console.log(event.code);
 });
 
-//INIT Calls
-window.onload = function () {
+//Executed when window is loaded
+window.addEventListener('load', () => {
 	console.log('Website fully loaded');
 	const playerBarRepeat = setInterval(updatePlayerBar, 100);
 	updateIcons();
-};
+});
