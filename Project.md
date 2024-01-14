@@ -1,5 +1,6 @@
 # To-Do List
 
+-   _ISSUE XMLHTTPRequest method, add content on page using json file_
 -   _ISSUE songs not playing when on pages other than the song list page_
 -   _when song finishes, reset the player if autoplay is off_
 -   _add volume slider and mute button_

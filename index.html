@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="./css/style.css">
     <title>Musix | Your music buddy!</title>
     <link rel="shortcut icon" href="./media/musix-icon.png" type="image/png">
+
+    <!-- <script src="./js/script.js" type="module"></script> -->
+    <script src="./js/scripts.js" type="module"></script>
+    <script src="https://kit.fontawesome.com/c461deb085.js" crossorigin="anonymous"></script>
+    <!-- <link rel="javascript" type="module" href="./js/script.js"> -->
 </head>
 
 <body>
@@ -17,19 +22,73 @@
     <div class="container">
         <nav>
             <ul>
-                <li class="brand nav-item clickable clickable-text text" onclick="loadHTML('mid-body','home.html')"><img
-                        src="media/logo2.png" alt="Musix">Musix</li>
-                <li class="nav-item clickable clickable-text text" onclick="loadHTML('mid-body','explore.html')">Explore
+                <li class="brand nav-item clickable clickable-text text" id="nav-logo"><img src="media/logo2.png"
+                        alt="Musix">Musix</li>
+                <li class="nav-item clickable clickable-text text" id="nav-explore">Explore
                 </li>
-                <li class="nav-item clickable clickable-text text" onclick="loadHTML('mid-body','home.html')">Player
+                <li class="nav-item clickable clickable-text text" id="nav-player">Player
                 </li>
-                <li class="nav-item clickable clickable-text text" onclick="loadHTML('mid-body','aboutUs.html')">About
+                <li class="nav-item clickable clickable-text text" id="nav-about">About
                     Us
                 </li>
             </ul>
         </nav>
         <div class="mid-body">
-            <p>Loading...</p>
+            <!-- <p>Loading...</p> -->
+            <!-- --------------------------------------- -->
+            <h1>
+                Your favourite songs
+            </h1>
+            <ul class="songitemcontainer">
+                <!-- <li class="song-item song-li clickable clickable-box" id="100">
+                    <img alt="0" src="./media/covers/100.jpg">
+                    <span class="songname">Dil Nu</span>
+                    <span class="songlistplay song-metadata">
+                        <span class="timestamp">03:53 </span>
+                        <i id="song-icon-100" class="song-icon fa-regular songitemplay fa-circle-play fa-xl"></i>
+                    </span>
+                </li>
+                <li class="song-item song-li clickable clickable-box" id="101">
+                    <img alt="1" src="./media/covers/101.jpg">
+                    <span class="songname">Kantara</span>
+                    <span class="songlistplay song-metadata">
+                        <span class="timestamp">00:29</span>
+                        <i id="song-icon-101" class="song-icon fa-regular songitemplay fa-circle-play fa-xl"></i>
+                    </span>
+                </li>
+                <li class="song-item song-li clickable clickable-box" id="102">
+                    <img alt="2" src="./media/covers/102.jpg">
+                    <span class="songname">Tere Hawale</span>
+                    <span class="songlistplay song-metadata">
+                        <span class="timestamp">05:50</span>
+                        <i id="song-icon-102" class="song-icon fa-regular songitemplay fa-circle-play fa-xl"></i>
+                    </span>
+                </li>
+                <li class="song-item song-li clickable clickable-box" id="103">
+                    <img alt="3" src="./media/covers/103.jpg">
+                    <span class="songname">Kahani Suno</span>
+                    <span class="songlistplay song-metadata">
+                        <span class="timestamp">02:53</span>
+                        <i id="song-icon-103" class="song-icon fa-regular songitemplay fa-circle-play fa-xl"></i>
+                    </span>
+                </li>
+                <li class="song-item song-li clickable clickable-box" id="104">
+                    <img alt="4" src="./media/covers/104.jpg">
+                    <span class="songname">Heeriye</span>
+                    <span class="songlistplay song-metadata">
+                        <span class="timestamp">03:19</span>
+                        <i id="song-icon-104" class="song-icon fa-regular songitemplay fa-circle-play fa-xl"></i>
+                    </span>
+                </li>
+                <li class="song-item song-li clickable clickable-box" id="105">
+                    <img alt="5" src="./media/covers/105.jpg">
+                    <span class="songname">Udd Ja Kale Kawan</span>
+                    <span class="songlistplay song-metadata">
+                        <span class="timestamp">04:48</span>
+                        <i id="song-icon-105" class="song-icon fa-regular songitemplay fa-circle-play fa-xl"></i>
+                    </span>
+                </li> -->
+            </ul>
         </div>
     </div>
     <div class="player-dashboard">
@@ -39,28 +98,29 @@
         <div class="controls">
             <div class="song-info">
                 <span id="duration-passed" class="inactive-item"
-                    title="This feature is currently in making">00:00</span>
+                    title="This feature is currently in making">Duration</span>
                 |
-                <span id="master-song-name">Dil Nu</span>
+                <span id="master-song-name">Song Name Here</span>
             </div>
             <div class="player-controls">
                 <i class="fa-solid fa-backward fa-xl active-item clickable clickable-text text" id="prev-btn"
-                    onclick="previousAction()" title="previous (J)"></i>
+                    title="previous (J)"></i>
                 <i class="fa-regular fa-circle-play fa-xl active-item clickable clickable-text text"
-                    id="master-play-btn" onclick="masterPlayAction()" title="play/pause (Space or K)"></i>
+                    id="master-play-btn" title="play/pause (Space or K)"></i>
                 <i class="fa-solid fa-forward fa-xl active-item clickable clickable-text text" id="next-btn"
-                    onclick="nextAction()" title="next (L)"></i>
+                    title="next (L)"></i>
             </div>
             <div class="additional-controls" title="This feature is currently in making">
                 <!-- <p>Additional Controls</p> -->
                 <i class="fa-solid fa-repeat fa-xl inactive-item clickable clickable-text text" id="toggle-repeat-btn"
-                    onclick="toggleRepeat()" title="Toggle Repeat (R)"></i>
+                    title="Toggle Repeat (R)"></i>
             </div>
         </div>
     </div>
 </body>
-<script src="https://kit.fontawesome.com/c461deb085.js" crossorigin="anonymous"></script>
-<script src="js/script.js"></script>
-<script>loadHTML('mid-body', 'home.html');</script>
+
+<!-- <script src="https://kit.fontawesome.com/c461deb085.js" crossorigin="anonymous"></script> -->
+<!-- <script type="module" src="js/script.js"></script> -->
+
 
 </html>

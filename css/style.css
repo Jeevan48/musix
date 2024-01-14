@@ -131,7 +131,7 @@ nav ul {
 
 /* ---------------------------------------------------------------------------- */
 
-.songitem {
+.song-item {
 	display: flex;
 	height: 50px;
 	width: 100%;
@@ -151,7 +151,7 @@ nav ul {
 	box-shadow: 0 0 5px 1px blue;
 } */
 
-.songitem img {
+.song-item img {
 	margin: 0 2px;
 	width: 45px;
 	border-radius: 50%;

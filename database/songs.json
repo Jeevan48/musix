@@ -1,0 +1,44 @@
+[
+	{
+		"id": "100",
+		"song": "Dil Nu",
+		"duration": "03:53",
+		"filePath": "songs/1.mp3",
+		"coverPath": "media/covers/1.jpg"
+	},
+	{
+		"id": "101",
+		"song": "Kantara",
+		"duration": "00:29",
+		"filePath": "songs/2.mp3",
+		"coverPath": "media/covers/2.jpg"
+	},
+	{
+		"id": "102",
+		"song": "Tere Hawale",
+		"duration": "05:50",
+		"filePath": "songs/3.mp3",
+		"coverPath": "media/covers/3.jpg"
+	},
+	{
+		"id": "103",
+		"song": "Kahani Suno",
+		"duration": "02:53",
+		"filePath": "songs/4.mp3",
+		"coverPath": "media/covers/4.jpg"
+	},
+	{
+		"id": "104",
+		"song": "Heeriye",
+		"duration": "03:19",
+		"filePath": "songs/5.mp3",
+		"coverPath": "media/covers/5.jpg"
+	},
+	{
+		"id": "105",
+		"song": "Udd Ja Kaale Kawan",
+		"duration": "04:48",
+		"filePath": "songs/6.mp3",
+		"coverPath": "media/covers/6.jpg"
+	}
+]
