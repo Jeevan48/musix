@@ -228,6 +228,7 @@ export function updateSong(indexIn) {
 		AudioElement.currentTime = 0;
 		ProgressBar.value = 0;
 		MasterSongName.innerText = songs_1[currentSongIndex].song;
+		songDurationPassed.innerText = songs_1[currentSongIndex].duration;
 		console.log(songs_1[currentSongIndex]);
 	}
 }
