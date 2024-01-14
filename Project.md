@@ -1,13 +1,13 @@
 # To-Do List
 
--   _ISSUE XMLHTTPRequest method, add content on page using json file_
+-   _convert updateIcons to updateDynamicContent_
 -   _ISSUE songs not playing when on pages other than the song list page_
--   _when song finishes, reset the player if autoplay is off_
 -   _add volume slider and mute button_
 -   _when clicking on prev, if song has played more than 5 seconds, play the same song from start_
 -   _update colors (primary, secondary, accent)_
 -   _add live song duration_
--   _convert updateIcons to updateDynamicContent_
+-   ~~ISSUE XMLHTTPRequest method, add content on page using json file~~
+-   ~~when song finishes, reset the player if autoplay is off~~
 -   ~~clean the code, rename and restructure whereever needed~~
 -   ~~ISSUE with repeat mode keyboard control, working on alt key as well no matter what~~
 -   ~~add autoplay next toggle button (autoplay function and variables implemented)~~

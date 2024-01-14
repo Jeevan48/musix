@@ -1,44 +1,44 @@
 [
 	{
-		"id": "100",
+		"id": "0",
 		"song": "Dil Nu",
 		"duration": "03:53",
-		"filePath": "songs/1.mp3",
-		"coverPath": "media/covers/1.jpg"
+		"filePath": "database/songs/SONG_0.mp3",
+		"coverPath": "database/covers/IMG_0.jpg"
 	},
 	{
-		"id": "101",
+		"id": "1",
 		"song": "Kantara",
 		"duration": "00:29",
-		"filePath": "songs/2.mp3",
-		"coverPath": "media/covers/2.jpg"
+		"filePath": "database/songs/SONG_1.mp3",
+		"coverPath": "database/covers/IMG_1.jpg"
 	},
 	{
-		"id": "102",
+		"id": "2",
 		"song": "Tere Hawale",
 		"duration": "05:50",
-		"filePath": "songs/3.mp3",
-		"coverPath": "media/covers/3.jpg"
+		"filePath": "database/songs/SONG_2.mp3",
+		"coverPath": "database/covers/IMG_2.jpg"
 	},
 	{
-		"id": "103",
+		"id": "3",
 		"song": "Kahani Suno",
 		"duration": "02:53",
-		"filePath": "songs/4.mp3",
-		"coverPath": "media/covers/4.jpg"
+		"filePath": "database/songs/SONG_3.mp3",
+		"coverPath": "database/covers/IMG_3.jpg"
 	},
 	{
-		"id": "104",
+		"id": "4",
 		"song": "Heeriye",
 		"duration": "03:19",
-		"filePath": "songs/5.mp3",
-		"coverPath": "media/covers/5.jpg"
+		"filePath": "database/songs/SONG_4.mp3",
+		"coverPath": "database/covers/IMG_4.jpg"
 	},
 	{
-		"id": "105",
+		"id": "5",
 		"song": "Udd Ja Kaale Kawan",
 		"duration": "04:48",
-		"filePath": "songs/6.mp3",
-		"coverPath": "media/covers/6.jpg"
+		"filePath": "database/songs/SONG_5.mp3",
+		"coverPath": "database/covers/IMG_5.jpg"
 	}
 ]

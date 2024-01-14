@@ -1,68 +1,42 @@
+//getting songs list from json file
 import songs from '../database/songs.json' assert { type: 'json' };
-console.log(songs);
+const songs_1 = JSON.parse(JSON.stringify(songs));
 
 // // Getting Elements
-export const AudioElement = new Audio('songs/100.mp3'); //stores the current song
-// const MasterPlayButton = document.getElementById('master-play-btn'); //the master play button
+const AudioElement = new Audio('database/songs/SONG_0.mp3'); //stores the current song
 const PreviousButton = document.getElementById('prev-btn'); //previous button
 const NextButton = document.getElementById('next-btn'); //previous button
-// const ProgressBarContainer = document.getElementById('progress-bar-container');
 const ProgressBar = document.getElementById('progress-bar'); //song progress bar
+const ProgressBarContainer = document.getElementById('progress-bar-container'); //song progress bar
 let MasterSongName = document.getElementById('master-song-name'); //current song name
 let songDurationPassed = document.querySelector('#duration-passed');
 let ToggleRepeatButton = document.getElementById('toggle-repeat-btn'); //toggle repeat button
+const MasterPlayButton = document.querySelector('#master-play-btn');
 
-//player parameters
-const playlistNo = '10'; //stores playlist no
-let currentSongIndex = 0; //stored index no of current song
-let repeatMode = 2; //0=repeat off, 1=repeat one, 2=repeat all
-let shuffleMode = 0; //0=shuffle off, 1=shuffle on
-let autoplayMode = true; //to control if next song should play automatically or not
+//player parameters object (works as state of the player)
+export let Player = {
+	playlistNo: 0, //playlist no
+	currentSongIndex: 0, //index no of current song
+	repeatMode: 2, //0=rep off, 1=rep one, 2=rep all
+	shuffleMode: 0, //0=shuffle off, 1=shuffle on
+	audio: AudioElement, //Audio Element
+	PrevBtn: PreviousButton, //Previous Button
+	MasterBtn: MasterPlayButton, //Master Play Button
+	NextBtn: NextButton, //Next Button
+	ToggleRepeatBtn: ToggleRepeatButton, //Toggle Repeat Button
+	ProgressBarContainer: ProgressBarContainer, //Progress Bar Container
+};
 
-// let songs_1 = [
-// 	{
-// 		songName: 'Dil Nu',
-// 		filePath: 'songs/1.mp3',
-// 		coverPath: 'media/covers/1.jpg',
-// 	},
-// 	{
-// 		songName: 'Kantara',
-// 		filePath: 'songs/2.mp3',
-// 		coverPath: 'media/covers/2.jpg',
-// 	},
-// 	{
-// 		songName: 'Tere Hawale',
-// 		filePath: 'songs/3.mp3',
-// 		coverPath: 'media/covers/3.jpg',
-// 	},
-// 	{
-// 		songName: 'Kahani Suno',
-// 		filePath: 'songs/4.mp3',
-// 		coverPath: 'media/covers/4.jpg',
-// 	},
-// 	{
-// 		songName: 'Heeriye',
-// 		filePath: 'songs/5.mp3',
-// 		coverPath: 'media/covers/5.jpg',
-// 	},
-// 	{
-// 		songName: 'Udd Ja Kaale Kawan',
-// 		filePath: 'songs/6.mp3',
-// 		coverPath: 'media/covers/6.jpg',
-// 	},
-// ];
+//for testing purposes
+export function inspectionMethod() {
+	console.log(AudioElement.currentTime);
+}
 
-//getting songs list from json file
-
-const songs_1 = JSON.parse(JSON.stringify(songs));
-console.log(songs_1);
-
+//load dynamic page content
 export function loadHTML(className, fileName) {
 	console.log('Div id: ' + className + ', filename: ' + fileName);
-
 	let xhttp;
 	const element = document.querySelectorAll('.' + className);
-	console.log(element.length);
 	let file = fileName;
 
 	if (file) {
@@ -104,23 +78,25 @@ export function loadHTML(className, fileName) {
 	}
 }
 
+//load songs list from json file
 export function loadSongsFromJson() {
 	const element = document.querySelector('ul.songitemcontainer');
-	// element.innerHTML = '';
 	let htmlContent = '';
 	Array.from(songs_1).forEach((songItem) => {
-		const songID = songItem['id'];
-		const songName = songItem['song'];
-		const songDuration = songItem['duration'];
+		const songID = songItem.id;
+		const songName = songItem.song;
+		const songDuration = songItem.duration;
+		const coverPath = songItem.coverPath;
 
-		htmlContent += `<li class="song-item song-li clickable clickable-box" id="${songID}">
-		<img alt="Song Image" src="./media/covers/${songID}.jpg">
-		<span class="songname">${songName}</span>
-		<span class="songlistplay song-metadata">
-			<span class="timestamp">${songDuration}</span>
-			<i id="song-icon-${songID}" class="song-icon fa-regular songitemplay fa-circle-play fa-xl"></i>
-		</span>
-	</li>`;
+		htmlContent += `
+		<li class="song-item song-li clickable clickable-box" id="${songID}">
+			<img alt="Song Image" src="./${coverPath}">
+			<span class="songname">${songName}</span>
+			<span class="songlistplay song-metadata">
+				<span class="timestamp">${songDuration}</span>
+				<i id="song-icon-${songID}" class="song-icon fa-regular songitemplay fa-circle-play fa-xl"></i>
+			</span>
+		</li>`;
 	});
 	element.innerHTML = htmlContent;
 }
@@ -128,8 +104,10 @@ export function loadSongsFromJson() {
 export function playPlayer() {
 	if (AudioElement.paused || AudioElement.currentTime <= 0) {
 		AudioElement.play();
+		updateInterface();
 		return true;
 	} else {
+		updateInterface();
 		return false;
 	}
 }
@@ -138,79 +116,62 @@ export function playPlayer() {
 export function pausePlayer() {
 	if (AudioElement.played && AudioElement.currentTime > 0) {
 		AudioElement.pause();
+		updateInterface();
 		return true;
 	} else {
+		updateInterface();
 		return false;
 	}
 }
 
 //change all songs CSS to show as 'paused'
-export function resetList() {
-	Array.from(document.getElementsByClassName('songitemplay')).forEach(
-		(element) => {
-			// console.log('resetList Called');
-			element.classList.remove('fa-circle-pause');
-			element.classList.add('fa-circle-play');
-		}
-	);
-}
+// export function resetList() {
+// 	Array.from(document.getElementsByClassName('songitemplay')).forEach(
+// 		(element) => {
+// 			element.classList.remove('fa-circle-pause');
+// 			element.classList.add('fa-circle-play');
+// 		}
+// 	);
+// }
 
-//change the specific song's CSS from list to show as 'playing'
-export function showPlayingInList(songIndexIn) {
-	resetList();
-	let elem = document.getElementById(`song-icon-10${songIndexIn}`);
-	elem.classList.remove('fa-circle-play');
-	elem.classList.add('fa-circle-pause');
-}
+// //change the specific song's CSS from list to show as 'playing'
+// export function showPlayingInList(songIndexIn) {
+// 	resetList();
+// 	let elem = document.getElementById(`song-icon-10${songIndexIn}`);
+// 	elem.classList.remove('fa-circle-play');
+// 	elem.classList.add('fa-circle-pause');
+// }
 
 //when master play button clicked
 export function masterPlayAction() {
-	if (playPlayer()) {
-		showPlayingInList(currentSongIndex);
-	} else {
+	if (!playPlayer()) {
 		pausePlayer();
-		resetList();
 	}
-}
-
-// AudioElement.addEventListener('timeupdate', function ()
-export function updatePlayerBar() {
-	const current_time = AudioElement.currentTime;
-	const duration_time = AudioElement.duration;
-
-	if (!isNaN(duration_time)) {
-		const percentage = (current_time / duration_time) * 100;
-		ProgressBar.style.width = percentage + '%';
-	} else {
-		ProgressBar.style.width = '0%';
-	}
+	updateInterface();
 }
 
 //song clicked method
-export function songAction(e, songID) {
-	// console.log(`songAction called on song ${songID}`);
-	// e = document.getElementById(songID);
-	// console.log(e);
+export function songAction(songIDIn) {
+	let e = document.querySelector(`#song-icon-${songIDIn}`);
 	//isAlreadyPlaying
 	if (e.classList.contains('fa-circle-pause')) {
-		// console.log('a song was playing...pausing it...');
-		resetList();
-		// e.classList.remove('fa-circle-pause');
-		// e.classList.add('fa-circle-play');
 		pausePlayer();
 	} else {
-		// resetList();
-		// console.log('that song was not playing...playing it...');
-		// e.classList.remove('fa-circle-play');
-		// e.classList.add('fa-circle-pause');
 		pausePlayer();
-		let indexIn = parseInt(songID.charAt(songID.length - 1), 10);
-		// console.log(indexIn);
-		updateSong(indexIn);
-		showPlayingInList(indexIn);
+		let indexIn = parseInt(songIDIn, 10);
+		if (Player.currentSongIndex != indexIn) {
+			Player.currentSongIndex = indexIn;
+			let newSrc = songs_1[Player.currentSongIndex].filePath;
+			AudioElement.src = newSrc;
+			AudioElement.currentTime = 0;
+			// ProgressBar.value = 0;
+			// MasterSongName.innerText = songs_1[Player.currentSongIndex].song;
+			// songDurationPassed.innerText =
+			// 	songs_1[Player.currentSongIndex].duration;
+		}
 		playPlayer();
-		// updateIcons();
 	}
+	updateInterface();
 }
 
 export function replayCurrentSong() {
@@ -220,16 +181,90 @@ export function replayCurrentSong() {
 }
 
 //update audio source
-export function updateSong(indexIn) {
-	if (currentSongIndex != indexIn) {
-		currentSongIndex = indexIn;
-		let newSrc = `songs/10${currentSongIndex}.mp3`;
-		AudioElement.src = newSrc;
-		AudioElement.currentTime = 0;
-		ProgressBar.value = 0;
-		MasterSongName.innerText = songs_1[currentSongIndex].song;
-		songDurationPassed.innerText = songs_1[currentSongIndex].duration;
-		console.log(songs_1[currentSongIndex]);
+// export function updateSong(indexIn) {
+// 	if (Player.currentSongIndex != indexIn) {
+// 		Player.currentSongIndex = indexIn;
+// 		let newSrc = `songs/10${Player.currentSongIndex}.mp3`;
+// 		AudioElement.src = newSrc;
+// 		AudioElement.currentTime = 0;
+// 		ProgressBar.value = 0;
+// 		MasterSongName.innerText = songs_1[Player.currentSongIndex].song;
+// 		songDurationPassed.innerText =
+// 			songs_1[Player.currentSongIndex].duration;
+// 	}
+// }
+
+//next button click actions
+export function nextAction() {
+	let tempIndex = Player.currentSongIndex;
+	if (Player.repeatMode == 1) {
+		replayCurrentSong();
+		updateInterface();
+		return;
+	} else if (Player.repeatMode == 2 && tempIndex == songs_1.length - 1) {
+		tempIndex = 0;
+	} else if (tempIndex < songs_1.length - 1) {
+		tempIndex += 1;
+	} else {
+		updateInterface();
+		return;
+	}
+	// ProgressBar.value = 0;
+	pausePlayer();
+	songAction(tempIndex);
+	playPlayer();
+
+	updateInterface();
+}
+
+export function previousAction() {
+	let tempIndex = Player.currentSongIndex;
+	if (Player.repeatMode == 1) {
+		replayCurrentSong();
+		updateInterface();
+		return;
+	} else if (Player.repeatMode == 2 && tempIndex == 0) {
+		tempIndex = songs_1.length - 1;
+	} else if (tempIndex > 0) {
+		tempIndex -= 1;
+	} else {
+		updateInterface();
+		return;
+	}
+	// ProgressBar.value = 0;
+	pausePlayer();
+	songAction(tempIndex);
+	playPlayer();
+
+	updateInterface();
+}
+
+//toggle Repeat Mode to a specific mode
+export function toggleRepeatTo(newRepeat) {
+	Player.repeatMode = newRepeat % 3;
+	updateInterface();
+}
+
+//toggle Repeat Mode
+export function toggleRepeat() {
+	toggleRepeatTo(Player.repeatMode + 1);
+}
+
+//Initial Data for player
+export function addInitialData() {
+	MasterSongName.innerHTML = songs_1[Player.currentSongIndex].song;
+	songDurationPassed.innerText = songs_1[Player.currentSongIndex].duration;
+}
+
+export function updatePlayerBar() {
+	const current_time = AudioElement.currentTime;
+	const duration_time = AudioElement.duration;
+
+	if (!isNaN(duration_time)) {
+		const percentage = (current_time / duration_time) * 100;
+		ProgressBar.style.width = percentage + '%';
+	} else {
+		ProgressBar.style.width = '0%';
 	}
 }
 
@@ -262,180 +297,71 @@ export function enableItem(Item) {
 }
 
 //update content on page (that depend on state of the player)
-export function updateIcons() {
-	if (currentSongIndex == 0 && repeatMode == 0) {
+export function updateInterface() {
+	//MASTER PLAY BUTTON UPDATE
+	if (AudioElement.paused) {
+		MasterPlayButton.classList.remove('fa-pause-circle');
+		MasterPlayButton.classList.add('fa-play-circle');
+	} else {
+		MasterPlayButton.classList.add('fa-pause-circle');
+		MasterPlayButton.classList.remove('fa-play-circle');
+	}
+
+	//PREVIOUS BUTTON UPDATE
+	if (Player.currentSongIndex == 0 && Player.repeatMode == 0) {
 		disableItem(PreviousButton);
 	} else {
 		enableItem(PreviousButton);
 	}
-	if (currentSongIndex == songs_1.length - 1 && repeatMode == 0) {
+	//NEXT BUTTON UPDATE
+	if (
+		Player.currentSongIndex == songs_1.length - 1 &&
+		Player.repeatMode == 0
+	) {
 		disableItem(NextButton);
 	} else {
 		enableItem(NextButton);
 	}
 
-	//changing repeat mode icon
-	if (repeatMode == 0) {
+	//REPEAT MODE ICON UPDATE
+	if (Player.repeatMode == 0) {
 		ToggleRepeatButton.classList.remove('active-item');
 		ToggleRepeatButton.classList.add('inactive-item');
 		ToggleRepeatButton.innerText = '';
-		// console.log('Repeat Off');
-	} else if (repeatMode == 1 || repeatMode == 2) {
+	} else if (Player.repeatMode == 1 || Player.repeatMode == 2) {
 		ToggleRepeatButton.classList.remove('inactive-item');
 		ToggleRepeatButton.classList.add('active-item');
-		if (repeatMode == 1) {
+		if (Player.repeatMode == 1) {
 			ToggleRepeatButton.innerText = '1';
-			// console.log('Repeat One');
-		} else if (repeatMode == 2) {
+		} else if (Player.repeatMode == 2) {
 			ToggleRepeatButton.innerText = '';
-			// console.log('Repeat All');
 		}
 	} else {
 		console.error('Error in Switching Repeat Mode.');
 	}
+
+	//SONG LIST UPDATE
+	// console.log('Updating list...');
+	Array.from(document.getElementsByClassName('songitemplay')).forEach(
+		(element) => {
+			const elemID =
+				element.parentElement.parentElement.getAttribute('id');
+			// console.log(elemID);
+			// console.log(Player.currentSongIndex);
+			if (
+				!AudioElement.paused &&
+				parseInt(elemID, 10) == Player.currentSongIndex
+			) {
+				element.classList.remove('fa-circle-play');
+				element.classList.add('fa-circle-pause');
+			} else {
+				element.classList.remove('fa-circle-pause');
+				element.classList.add('fa-circle-play');
+			}
+		}
+	);
+
+	//MASTER SONG INFO UPDATE
+	MasterSongName.innerText = songs_1[Player.currentSongIndex].song;
+	songDurationPassed.innerText = songs_1[Player.currentSongIndex].duration;
 }
-
-//next button click actions
-export function nextAction() {
-	console.log('nextAction Called...');
-	let tempIndex = currentSongIndex;
-	if (repeatMode == 1) {
-		replayCurrentSong();
-		return;
-	} else if (repeatMode == 2 && tempIndex == songs_1.length - 1) {
-		tempIndex = 0;
-	} else if (tempIndex < songs_1.length - 1) {
-		tempIndex += 1;
-	} else {
-		return;
-	}
-	ProgressBar.value = 0;
-
-	pausePlayer();
-	updateSong(tempIndex);
-	playPlayer();
-
-	resetList();
-	showPlayingInList(tempIndex);
-
-	// updateIcons();
-}
-
-//previous button click actions
-export function previousAction() {
-	let tempIndex = currentSongIndex;
-	console.log('previousAction Called...');
-	if (repeatMode == 1) {
-		replayCurrentSong();
-		return;
-	} else if (repeatMode == 2 && tempIndex == 0) {
-		tempIndex = songs_1.length - 1;
-	} else if (tempIndex > 0) {
-		tempIndex -= 1;
-	} else {
-		return;
-	}
-	ProgressBar.value = 0;
-
-	pausePlayer();
-	updateSong(tempIndex);
-	playPlayer();
-
-	resetList();
-	showPlayingInList(tempIndex);
-}
-
-//toggle Repeat Mode to a specific mode
-export function toggleRepeatTo(newRepeat) {
-	repeatMode = newRepeat % 3;
-	updateIcons();
-}
-
-//toggle Repeat Mode
-export function toggleRepeat() {
-	toggleRepeatTo(repeatMode + 1);
-}
-
-//Initial Data for player
-export function addInitialData() {
-	MasterSongName.innerHTML = songs_1[currentSongIndex]['song'];
-	songDurationPassed.innerText = songs_1[currentSongIndex]['duration'];
-}
-
-// //Progress Bar Click Event
-// ProgressBarContainer.addEventListener('click', function (event) {
-// 	const clickPositionX =
-// 		event.clientX - ProgressBarContainer.getBoundingClientRect().left;
-// 	const containerWidth = ProgressBarContainer.clientWidth;
-
-// 	const clickPercentage = (clickPositionX / containerWidth) * 100;
-// 	const newTime = (clickPercentage / 100) * AudioElement.duration;
-
-// 	AudioElement.currentTime = newTime;
-
-// 	ProgressBar.style.width = clickPercentage + '%';
-// });
-
-// /* EVENT LISTENERS */
-
-// //Audio Play Event
-// AudioElement.addEventListener('play', function () {
-// 	MasterPlayButton.classList.remove('fa-play-circle');
-// 	MasterPlayButton.classList.add('fa-pause-circle');
-// 	updateIcons();
-// });
-
-// //Audio Pause Event
-// AudioElement.addEventListener('pause', function () {
-// 	MasterPlayButton.classList.remove('fa-pause-circle');
-// 	MasterPlayButton.classList.add('fa-play-circle');
-// 	updateIcons();
-// });
-
-// //Audio End Event
-// AudioElement.addEventListener('ended', function () {
-// 	if (autoplayMode && repeatMode != 0) {
-// 		if (repeatMode == 1) {
-// 			AudioElement.currentTime = 0;
-// 			playPlayer();
-// 		} else if (repeatMode == 2) {
-// 			nextAction();
-// 		} else {
-// 			console.error('Error while playing next song automatically');
-// 		}
-// 	}
-// 	updateIcons();
-// });
-
-// //Keyboard Controls
-// document.addEventListener('keydown', function (event) {
-// 	if (
-// 		event.code === 'MediaPlayPause' ||
-// 		event.code === 'Space' ||
-// 		event.code === 'KeyK'
-// 	) {
-// 		event.preventDefault();
-// 		console.log('Play/Pause button pressed');
-// 		masterPlayAction();
-// 	} else if (event.code === 'MediaTrackPrevious' || event.code === 'KeyJ') {
-// 		event.preventDefault();
-// 		console.log('Previous button pressed');
-// 		previousAction();
-// 	} else if (event.code === 'MediaTrackNext' || event.code === 'KeyL') {
-// 		event.preventDefault();
-// 		console.log('Next button pressed');
-// 		nextAction();
-// 	} else if (event.code == 'KeyR') {
-// 		event.preventDefault();
-// 		console.log('Toggle Repeat Clicked');
-// 		toggleRepeat();
-// 	}
-// 	console.log(event.code);
-// });
-
-// //Executed when window is loaded
-// window.addEventListener('load', () => {
-// 	console.log('Website fully loaded');
-// 	const playerBarRepeat = setInterval(updatePlayerBar, 100);
-// 	updateIcons();
-// });
